@@ -4,7 +4,6 @@ using EmployeeAssignments.API.Infrastructure.DataSeeder;
 using EmployeeAssignments.API.Infrastructure.DbInitializer;
 using EmployeeAssignments.API.Repositories;
 using EmployeeAssignments.API.Services;
-using Microsoft.OpenApi.Models;
 
 internal class Program
 {
@@ -40,9 +39,9 @@ internal class Program
 
             await app.SeedDatabaseAsync();
         }
-        app.UseHttpsRedirection();
+        //app.UseHttpsRedirection();
 
-        app.UseAuthorization();
+        //app.UseAuthorization();
 
         app.MapControllers();
 

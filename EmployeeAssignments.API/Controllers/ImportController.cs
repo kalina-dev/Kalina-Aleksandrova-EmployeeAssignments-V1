@@ -9,6 +9,7 @@ public class ImportController(ICsvImportService importService) : ControllerBase
 {
     private readonly ICsvImportService _importService = importService;
 
+    [ApiExplorerSettings(IgnoreApi = true)]
     [HttpPost(Name = "employeeprojects")]
     public async Task<IActionResult> ImportEmployeeProjects([FromForm] IFormFile file)
     {
