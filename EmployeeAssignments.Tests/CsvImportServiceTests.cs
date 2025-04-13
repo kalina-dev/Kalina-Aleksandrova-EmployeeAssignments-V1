@@ -1,12 +1,11 @@
-﻿using Xunit;
-using Moq;
+﻿using Moq;
 using Microsoft.Extensions.DependencyInjection;
 using System.Text;
-using EmployeeAssignmentsV1.Repositories;
-using EmployeeAssignmentsV1.Services;
-using EmployeeAssignmentsV1.Entities;
+using EmployeeAssignments.API.Repositories;
+using EmployeeAssignments.API.Entities;
+using EmployeeAssignments.API.Services;
 
-namespace EmployeeProject.Tests
+namespace EmployeeAssignments.Tests
 {
     public class CsvImportServiceTests
     {

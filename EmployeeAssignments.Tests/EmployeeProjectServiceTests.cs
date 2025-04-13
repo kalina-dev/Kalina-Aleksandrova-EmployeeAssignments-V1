@@ -1,10 +1,10 @@
-﻿using EmployeeAssignmentsV1.Entities;
-using EmployeeAssignmentsV1.Repositories;
-using EmployeeAssignmentsV1.Services;
+﻿using EmployeeAssignments.API.Entities;
+using EmployeeAssignments.API.Repositories;
+using EmployeeAssignments.API.Services;
 using Moq;
 using Xunit;
 
-namespace EmployeeProject.Tests
+namespace EmployeeAssignments.Tests
 {
     public class EmployeeProjectServiceTests
     {
