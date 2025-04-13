@@ -1,0 +1,5 @@
+<h2>CSV Import</h2>
+<input type="file" (change)="onFileSelected($event)" />
+<button mat-raised-button color="primary" (click)="onUpload()">Upload</button>
+<div *ngIf="success" class="success">{{ success }}</div>
+<div *ngIf="error" class="error">{{ error }}</div>
