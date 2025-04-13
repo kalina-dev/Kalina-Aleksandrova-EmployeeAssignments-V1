@@ -2,8 +2,10 @@ import { Component } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 
 @Component({
+  standalone: false,
   selector: 'app-csv-import',
-  templateUrl: './csv-import.component.html'
+  templateUrl: './csv-import.component.html',
+  styleUrls: ['./csv-import.component.scss']
 })
 export class CsvImportComponent {
   file: File | null = null;
@@ -27,9 +29,15 @@ export class CsvImportComponent {
     const formData = new FormData();
     formData.append('file', this.file);
 
-    this.http.post('/api/employeeprojects/import', formData).subscribe({
-      next: () => this.success = 'File uploaded successfully.',
-      error: (err: HttpErrorResponse) => this.error = `Upload failed: ${err.message}`
+    this.http.post('/api/import/employeeprojects', formData).subscribe({
+      next: () => {
+        this.success = 'File uploaded successfully.';
+        this.error = '';
+      },
+      error: (err: HttpErrorResponse) => {
+        this.error = `Upload failed: ${err.message}`;
+        this.success = '';
+      }
     });
   }
 }

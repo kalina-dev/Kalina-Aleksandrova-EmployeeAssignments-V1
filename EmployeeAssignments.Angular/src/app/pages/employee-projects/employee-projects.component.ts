@@ -5,15 +5,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { EmployeeProjectsService } from '../../services/employee-projects.service';
 
 @Component({
+  standalone: false,
   selector: 'app-employee-projects',
-  templateUrl: './employee-projects.component.html'
+  templateUrl: './employee-projects.component.html',
+  styleUrls: ['./employee-projects.component.scss']
 })
 export class EmployeeProjectsComponent implements OnInit {
-  displayedColumns: string[] = ['EmpID', 'ProjectID', 'DateFrom', 'DateTo'];
+  displayedColumns: string[] = ['empId', 'projectId', 'dateFrom', 'dateTo'];
   dataSource = new MatTableDataSource<any>();
-  error = '';
-  startDate?: Date;
-  endDate?: Date;
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
@@ -21,27 +20,18 @@ export class EmployeeProjectsComponent implements OnInit {
   constructor(private service: EmployeeProjectsService) {}
 
   ngOnInit(): void {
-    this.loadProjects();
-  }
-
-  loadProjects(): void {
-    this.service.getProjects().subscribe({
-      next: data => {
-        this.dataSource = new MatTableDataSource(data);
-        this.dataSource.paginator = this.paginator;
-        this.dataSource.sort = this.sort;
-      },
-      error: err => {
-        this.error = 'Failed to load data. ' + err.message;
-      }
+    this.service.getProjects().subscribe(data => {
+      this.dataSource.data = data;
     });
   }
 
-  applyDateFilter(): void {
-    if (this.startDate && this.endDate && this.startDate > this.endDate) {
-      this.error = 'Start date must be before end date.';
-      return;
-    }
-    // Optionally implement filter using API or local filtering
+  ngAfterViewInit(): void {
+    this.dataSource.paginator = this.paginator;
+    this.dataSource.sort = this.sort;
+  }
+
+  applyFilter(event: Event): void {
+    const filterValue = (event.target as HTMLInputElement).value;
+    this.dataSource.filter = filterValue.trim().toLowerCase();
   }
 }
