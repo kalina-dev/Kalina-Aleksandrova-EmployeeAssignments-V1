@@ -46,8 +46,8 @@ internal class Program
         builder.Services.AddSingleton<IEmployeeRepository, EmployeeRepository>();
         builder.Services.AddSingleton<IProjectRepository, ProjectRepository>();
         builder.Services.AddSingleton<IEmployeeProjectRepository, EmployeeProjectRepository>();
-        builder.Services.AddTransient<IEmployeeProjectService, EmployeeProjectService>();
-        builder.Services.AddTransient<ICsvImportService, CsvImportService>();
+        builder.Services.AddScoped<IEmployeeProjectService, EmployeeProjectService>();
+        builder.Services.AddScoped<ICsvImportService, CsvImportService>();
         builder.Services.AddProblemDetails();
 
 
