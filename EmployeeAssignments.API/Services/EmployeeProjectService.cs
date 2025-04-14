@@ -1,8 +1,5 @@
 ﻿using EmployeeAssignments.API.Dtos;
-using EmployeeAssignments.API.Entities;
-using EmployeeAssignments.API.Models;
 using EmployeeAssignments.API.Repositories;
-using System.Net;
 
 namespace EmployeeAssignments.API.Services
 {

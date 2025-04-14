@@ -14,7 +14,7 @@ namespace EmployeeAssignments.API.Validators
                 .NotEmpty().WithMessage("DateFrom is required")
                 .LessThanOrEqualTo(DateTime.UtcNow).WithMessage("DateFrom must be in the past");
             RuleFor(x => x)
-                .Must(x => !x.DateTo.HasValue || x.DateTo > x.DateFrom)
+                .Must(x => x.DateTo > x.DateFrom)
                 .WithMessage("DateTo must be after DateFrom if provided");
         }
     }

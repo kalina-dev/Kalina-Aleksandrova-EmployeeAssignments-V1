@@ -23,15 +23,13 @@ namespace EmployeeAssignments.Tests
         {
             var listEmployeeProjects = new List<EmployeeProjectMap>
             {
-                new EmployeeProjectMap
-                {
+                new() {
                     EmpID = 1,
                     ProjectID = 101,
                     DateFrom = new DateTime(2022, 01, 10),
                     DateTo = new DateTime(2022, 08, 15)
                 },
-                new EmployeeProjectMap
-                {
+                new() {
                     EmpID = 2,
                     ProjectID = 101,
                     DateFrom = new DateTime(2022, 01, 01),
@@ -57,15 +55,13 @@ namespace EmployeeAssignments.Tests
         {
             var listEmployeeProjects = new List<EmployeeProjectMap>
             {
-                new EmployeeProjectMap
-                {
+                new() {
                     EmpID = 1,
                     ProjectID = 101,
                     DateFrom = new DateTime(2022, 01, 10),
                     DateTo = new DateTime(2022, 08, 15)
                 },
-                new EmployeeProjectMap
-                {
+                new() {
                     EmpID = 2,
                     ProjectID = 102,
                     DateFrom = new DateTime(2022, 01, 01),

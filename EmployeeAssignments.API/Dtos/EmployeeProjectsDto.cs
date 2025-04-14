@@ -1,10 +1,18 @@
-﻿namespace EmployeeAssignments.API.Dtos
+﻿using CsvHelper.Configuration.Attributes;
+
+public class EmployeeProjectsDto
 {
-    public class EmployeeProjectsDto
-    {
-        public int EmpID { get; set; }
-        public int ProjectID { get; set; }
-        public DateTime DateFrom { get; set; }
-        public DateTime? DateTo { get; set; }
-    }
+    [Name("EmpID")]
+    public int EmpID { get; set; }
+
+    [Name("ProjectID")]
+    public int ProjectID { get; set; }
+
+    [Name("DateFrom")]
+    [TypeConverter(typeof(CustomDateTimeConverter))]
+    public DateTime DateFrom { get; set; }
+
+    [Name("DateTo")]
+    [TypeConverter(typeof(CustomDateTimeConverter))]
+    public DateTime DateTo { get; set; }
 }
