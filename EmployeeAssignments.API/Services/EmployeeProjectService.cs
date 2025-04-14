@@ -1,15 +1,26 @@
 ﻿using EmployeeAssignments.API.Dtos;
+using EmployeeAssignments.API.Entities;
+using EmployeeAssignments.API.Models;
 using EmployeeAssignments.API.Repositories;
+using System.Net;
 
 namespace EmployeeAssignments.API.Services
 {
     public class EmployeeProjectService(IEmployeeProjectRepository employeeProjectRepository) : IEmployeeProjectService
     {
-        private readonly IEmployeeProjectRepository employeeProjectRepository = employeeProjectRepository;
+        private readonly IEmployeeProjectRepository _employeeProjectRepository = employeeProjectRepository;
 
         public async Task<EmployeePairResultDto?> GetLongestWorkingPairAsync()
         {
-            var records = await employeeProjectRepository.GetAllAsync();
+            var result = await _employeeProjectRepository.GetAllAsync();
+
+            if (!result.IsSuccess || result.Data == null)
+            {
+                // Optionally log result.Message for diagnostics
+                return null; // or throw if preferred
+            }
+
+            var records = result.Data;
 
             var pairs = new Dictionary<string, (int TotalDays, List<ProjectOverlapDetailDto> Projects)>();
 

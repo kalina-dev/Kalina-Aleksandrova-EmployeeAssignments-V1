@@ -1,4 +1,5 @@
 ﻿using EmployeeAssignments.API.Entities;
+using EmployeeAssignments.API.Models;
 using EmployeeAssignments.API.Repositories;
 using EmployeeAssignments.API.Services;
 using Moq;
@@ -38,21 +39,21 @@ namespace EmployeeAssignments.Tests
                 }
             };
 
-            _repoEmployeeProjectMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(listEmployeeProjects);
+            _repoEmployeeProjectMock
+                .Setup(repo => repo.GetAllAsync())
+                .ReturnsAsync(RepositoryResult<IEnumerable<EmployeeProjectMap>>.Ok(listEmployeeProjects));
 
-            // Act
             var result = await _employeeProjectService.GetLongestWorkingPairAsync();
 
-            // Assert
             Assert.NotNull(result);
-            Assert.Equal(1, result.EmpID1); // Employee 1
-            Assert.Equal(2, result.EmpID2); // Employee 2
-            Assert.True(result.TotalDaysWorkedTogether > 0); // Should be more than 0 days
-            Assert.Single(result.Projects); // Shared projects count
+            Assert.Equal(1, result.EmpID1);
+            Assert.Equal(2, result.EmpID2);
+            Assert.True(result.TotalDaysWorkedTogether > 0);
+            Assert.Single(result.Projects);
         }
 
         [Fact]
-        public async Task GetLongestWorkingPairAsync_ReturnsInCorrectPair()
+        public async Task GetLongestWorkingPairAsync_ReturnsNull_WhenNoSharedProjects()
         {
             var listEmployeeProjects = new List<EmployeeProjectMap>
             {
@@ -72,17 +73,25 @@ namespace EmployeeAssignments.Tests
                 }
             };
 
-            _repoEmployeeProjectMock.Setup(repo => repo.GetAllAsync()).ReturnsAsync(listEmployeeProjects);
+            _repoEmployeeProjectMock
+                .Setup(repo => repo.GetAllAsync())
+                .ReturnsAsync(RepositoryResult<IEnumerable<EmployeeProjectMap>>.Ok(listEmployeeProjects));
 
-            // Act
             var result = await _employeeProjectService.GetLongestWorkingPairAsync();
 
-            // Assert
             Assert.Null(result);
-            Assert.NotEqual(1, result?.EmpID1); // Employee 1
-            Assert.NotEqual(2, result?.EmpID2); // Employee 2
-            Assert.False(result?.TotalDaysWorkedTogether == 0); // Should be more than 0 days
-            Assert.NotEqual(1, result?.Projects.Count); // Shared projects count
+        }
+
+        [Fact]
+        public async Task GetLongestWorkingPairAsync_ReturnsNull_OnRepositoryError()
+        {
+            _repoEmployeeProjectMock
+                .Setup(repo => repo.GetAllAsync())
+                .ReturnsAsync(RepositoryResult<IEnumerable<EmployeeProjectMap>>.Error(System.Net.HttpStatusCode.InternalServerError, "DB error"));
+
+            var result = await _employeeProjectService.GetLongestWorkingPairAsync();
+
+            Assert.Null(result);
         }
     }
 }

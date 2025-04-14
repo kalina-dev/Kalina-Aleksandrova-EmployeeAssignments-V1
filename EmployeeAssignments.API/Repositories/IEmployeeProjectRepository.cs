@@ -1,13 +1,13 @@
 ﻿using EmployeeAssignments.API.Entities;
+using EmployeeAssignments.API.Models;
 
-namespace EmployeeAssignments.API.Repositories
+namespace EmployeeAssignments.API.Repositories;
+
+public interface IEmployeeProjectRepository
 {
-    public interface IEmployeeProjectRepository
-    {
-        Task<bool> ExistsAsync(EmployeeProjectMap ep);
-        Task<bool> EmployeeExistsAsync(int empId);
-        Task<bool> ProjectExistsAsync(int projectId);
-        Task InsertAsync(EmployeeProjectMap ep);
-        Task<IEnumerable<EmployeeProjectMap>> GetAllAsync();
-    }
+    Task<RepositoryResult<bool>> ExistsAsync(EmployeeProjectMap ep);
+    Task<RepositoryResult<bool>> EmployeeExistsAsync(int empId);
+    Task<RepositoryResult<bool>> ProjectExistsAsync(int projectId);
+    Task<RepositoryResult<bool>> InsertAsync(EmployeeProjectMap ep);
+    Task<RepositoryResult<IEnumerable<EmployeeProjectMap>>> GetAllAsync();
 }

@@ -5,6 +5,7 @@ using EmployeeAssignments.API.Entities;
 using EmployeeAssignments.API.Repositories;
 using EmployeeAssignments.API.Dtos;
 using EmployeeAssignments.API.Validators;
+using EmployeeAssignments.API.Models;
 
 namespace EmployeeAssignments.API.Services;
 
@@ -49,15 +50,21 @@ public class CsvImportService(IEmployeeProjectRepository repository) : ICsvImpor
             }
 
             // Check foreign keys
-            if (!await _repository.EmployeeExistsAsync(row.EmpID))
+            var empExists = await _repository.EmployeeExistsAsync(row.EmpID);
+            if (!empExists.IsSuccess || !empExists.Data)
             {
-                errors.Add($"Employee not found: ID = {row.EmpID}");
+                errors.Add(empExists.IsSuccess
+                    ? $"Employee not found: ID = {row.EmpID}"
+                    : $"Error checking employee: {empExists.Message}");
                 continue;
             }
 
-            if (!await _repository.ProjectExistsAsync(row.ProjectID))
+            var projectExists = await _repository.ProjectExistsAsync(row.ProjectID);
+            if (!projectExists.IsSuccess || !projectExists.Data)
             {
-                errors.Add($"Project not found: ID = {row.ProjectID}");
+                errors.Add(projectExists.IsSuccess
+                    ? $"Project not found: ID = {row.ProjectID}"
+                    : $"Error checking project: {projectExists.Message}");
                 continue;
             }
 
@@ -69,13 +76,24 @@ public class CsvImportService(IEmployeeProjectRepository repository) : ICsvImpor
                 DateTo = row.DateTo
             };
 
-            if (await _repository.ExistsAsync(entity))
+            var exists = await _repository.ExistsAsync(entity);
+            if (!exists.IsSuccess)
+            {
+                errors.Add($"Error checking duplicate: {exists.Message}");
+                continue;
+            }
+
+            if (exists.Data)
             {
                 errors.Add($"Duplicate: EmpID {entity.EmpID}, ProjectID {entity.ProjectID}, DateFrom {entity.DateFrom:yyyy-MM-dd}");
                 continue;
             }
 
-            await _repository.InsertAsync(entity);
+            var insertResult = await _repository.InsertAsync(entity);
+            if (!insertResult.IsSuccess)
+            {
+                errors.Add($"Failed to insert record (EmpID {entity.EmpID}, ProjectID {entity.ProjectID}): {insertResult.Message}");
+            }
         }
 
         return errors;

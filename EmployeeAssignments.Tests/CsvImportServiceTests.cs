@@ -4,6 +4,7 @@ using System.Text;
 using EmployeeAssignments.API.Repositories;
 using EmployeeAssignments.API.Entities;
 using EmployeeAssignments.API.Services;
+using EmployeeAssignments.API.Models;
 
 namespace EmployeeAssignments.Tests
 {
@@ -19,7 +20,7 @@ namespace EmployeeAssignments.Tests
             _repoMock = new Mock<IEmployeeProjectRepository>();
 
             services.AddSingleton(_repoMock.Object);
-            services.AddTransient<CsvImportService>(); // 💡 The real service
+            services.AddTransient<CsvImportService>();
 
             _serviceProvider = services.BuildServiceProvider();
         }
@@ -35,18 +36,20 @@ namespace EmployeeAssignments.Tests
         [Fact]
         public async Task Import_WithValidCsv_ShouldInsertOnce()
         {
-            // Arrange
-            _repoMock.Setup(r => r.EmployeeExistsAsync(1)).ReturnsAsync(true);
-            _repoMock.Setup(r => r.ProjectExistsAsync(10)).ReturnsAsync(true);
-            _repoMock.Setup(r => r.ExistsAsync(It.IsAny<EmployeeProjectMap>())).ReturnsAsync(false);
+            _repoMock.Setup(r => r.EmployeeExistsAsync(1))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(true));
+            _repoMock.Setup(r => r.ProjectExistsAsync(10))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(true));
+            _repoMock.Setup(r => r.ExistsAsync(It.IsAny<EmployeeProjectMap>()))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(false));
+            _repoMock.Setup(r => r.InsertAsync(It.IsAny<EmployeeProjectMap>()))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(true));
 
             var csv = "EmpID,ProjectID,DateFrom,DateTo\n1,10,2022-01-01,2022-12-31";
             var service = GetService();
 
-            // Act
             var result = await service.ImportEmployeeProjectsAsync(ToStream(csv));
 
-            // Assert
             Assert.Empty(result);
             _repoMock.Verify(r => r.InsertAsync(It.IsAny<EmployeeProjectMap>()), Times.Once);
         }
@@ -67,8 +70,10 @@ namespace EmployeeAssignments.Tests
         [Fact]
         public async Task Import_WithMissingFK_ShouldSkip()
         {
-            _repoMock.Setup(r => r.EmployeeExistsAsync(1)).ReturnsAsync(false);
-            _repoMock.Setup(r => r.ProjectExistsAsync(10)).ReturnsAsync(true);
+            _repoMock.Setup(r => r.EmployeeExistsAsync(1))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(false));
+            _repoMock.Setup(r => r.ProjectExistsAsync(10))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(true));
 
             var csv = "EmpID,ProjectID,DateFrom,DateTo\n1,10,2022-01-01,2022-12-31";
             var service = GetService();
@@ -83,9 +88,12 @@ namespace EmployeeAssignments.Tests
         [Fact]
         public async Task Import_WithDuplicate_ShouldSkip()
         {
-            _repoMock.Setup(r => r.EmployeeExistsAsync(1)).ReturnsAsync(true);
-            _repoMock.Setup(r => r.ProjectExistsAsync(10)).ReturnsAsync(true);
-            _repoMock.Setup(r => r.ExistsAsync(It.IsAny<EmployeeProjectMap>())).ReturnsAsync(true);
+            _repoMock.Setup(r => r.EmployeeExistsAsync(1))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(true));
+            _repoMock.Setup(r => r.ProjectExistsAsync(10))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(true));
+            _repoMock.Setup(r => r.ExistsAsync(It.IsAny<EmployeeProjectMap>()))
+                .ReturnsAsync(RepositoryResult<bool>.Ok(true));
 
             var csv = "EmpID,ProjectID,DateFrom,DateTo\n1,10,2022-01-01,2022-12-31";
             var service = GetService();
@@ -95,6 +103,21 @@ namespace EmployeeAssignments.Tests
             Assert.Single(result);
             Assert.Contains("Duplicate", result.First());
             _repoMock.Verify(r => r.InsertAsync(It.IsAny<EmployeeProjectMap>()), Times.Never);
+        }
+
+        [Fact]
+        public async Task Import_WhenRepositoryFails_ShouldReturnError()
+        {
+            _repoMock.Setup(r => r.EmployeeExistsAsync(1))
+                .ReturnsAsync(RepositoryResult<bool>.Error(System.Net.HttpStatusCode.InternalServerError, "Database error"));
+
+            var csv = "EmpID,ProjectID,DateFrom,DateTo\n1,10,2022-01-01,2022-12-31";
+            var service = GetService();
+
+            var result = await service.ImportEmployeeProjectsAsync(ToStream(csv));
+
+            Assert.Single(result);
+            Assert.Contains("Error checking employee", result.First());
         }
     }
 }
