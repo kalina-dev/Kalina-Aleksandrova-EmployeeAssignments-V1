@@ -17,7 +17,7 @@ Angular app was created:
 - allows the requested statistics for EmployeeProjects to be shown in a table.
 
 Steps to run the app:
-- pull/dowload the repo
+- pull/download the repo
 - set API project as start project if is not set;
 - open swagger http://localhost:5095/index.html	- you will see the endpoint for employees who have worked together on some project
 - test the API endpoint
