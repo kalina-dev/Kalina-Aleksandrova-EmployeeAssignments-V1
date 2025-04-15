@@ -29,7 +29,7 @@ export class CsvImportComponent {
     const formData = new FormData();
     formData.append('file', this.file);
 
-    this.http.post('/api/import/employeeprojects', formData).subscribe({
+    this.http.post('/import', formData).subscribe({
       next: () => {
         this.success = 'File uploaded successfully.';
         this.error = '';

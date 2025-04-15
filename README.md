@@ -22,5 +22,7 @@ Steps to run the app:
 - open swagger http://localhost:5095/index.html	- you will see the endpoint for employees who have worked together on some project
 - test the API endpoint
 - run unit test to figure out all scenarios I tested
-- run the angular app - ng serve and wait all packages to be installed
-- check the pages I implemented
+- run the angular app in some terminal separately through ng serve and wait all packages to be installed; it is running on 4200
+- endpoints:
+    http://localhost:5095/employeeprojects
+    http://localhost:5095/import

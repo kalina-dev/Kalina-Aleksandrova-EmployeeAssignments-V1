@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace EmployeeAssignments.API.Controllers;
 
 [ApiController]
-[Route("api\"[controller]")]
+[Route("[controller]")]
 public class ImportController(ICsvImportService importService) : ControllerBase
 {
     private readonly ICsvImportService _importService = importService;
