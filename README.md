@@ -7,7 +7,7 @@ Basic validations were applied when filling the data;
 Two endpoints requested in the assignment are implemented;
 For completeness, basic CRUD operations are also applied to Employees and Projects; they are not displayed as endpoints;
 Dapper is used for data processing;
-Six unit tests are written to ensure the solution;
+Eight unit tests are written to ensure the solution;
 Global error handling was applied to the API;
 RepositoryResult was investigated further;
 CustomDateConverter was provided; it allows different dates support;
@@ -15,3 +15,12 @@ Program.cs was set to enable CORS; different status codes were described;
 Angular app was created:
 - show the scv import feature;
 - allows the requsted statistics for EmployeeProjects to be shown in a table.
+
+Steps to run the app:
+- pull/dowloand the repo
+- set API project as start project if is not set;
+- open swagger http://localhost:5095/index.html	- you will see the endpoint for employees who have worked together on some project
+- test the API endpoint
+- run unit test to figure out all scenarios I tested
+- run the angular app - ng serve and wait all packages to be installed
+- check the pages I implemented
