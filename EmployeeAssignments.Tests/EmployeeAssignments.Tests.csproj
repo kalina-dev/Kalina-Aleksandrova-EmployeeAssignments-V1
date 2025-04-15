@@ -16,7 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\EmployeeAssignments.API\EmployeeAssignments.API.csproj" />
+    <ProjectReference Include="..\EmployeeAssignments.API\EmployeeAssignments.Server.csproj" />
   </ItemGroup>
 
   <ItemGroup>

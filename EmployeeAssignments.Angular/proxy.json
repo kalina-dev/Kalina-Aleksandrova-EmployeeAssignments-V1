@@ -1,6 +1,0 @@
-{
-  "/__/*": {
-    "target": "http://localhost:5095",
-    "secure": false
-  }
-}
