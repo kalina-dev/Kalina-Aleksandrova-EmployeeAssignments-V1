@@ -11,17 +11,17 @@ import { EmployeeProjectsService } from '../../services/employee-projects.servic
   styleUrls: ['./employee-projects.component.scss']
 })
 export class EmployeeProjectsComponent implements OnInit {
-  displayedColumns: string[] = ['empId', 'projectId', 'dateFrom', 'dateTo'];
+  displayedColumns: string[] = ['empID1', 'empID2', 'totalDaysWorkedTogether', 'projects'];
   dataSource = new MatTableDataSource<any>();
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
   @ViewChild(MatSort) sort!: MatSort;
 
-  constructor(private service: EmployeeProjectsService) {}
+  constructor(private service: EmployeeProjectsService) { }
 
   ngOnInit(): void {
     this.service.getProjects().subscribe(data => {
-      this.dataSource.data = data;
+      this.dataSource.data = [data];
     });
   }
 
@@ -33,5 +33,9 @@ export class EmployeeProjectsComponent implements OnInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+  }
+
+  getProjectIdsAsString(projects: any[]): string {
+    return projects?.map(p => p.projectID).join(', ') || '';
   }
 }
