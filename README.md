@@ -14,10 +14,10 @@ CustomDateConverter was provided; it allows different dates support;
 Program.cs was set to enable CORS; different status codes were described;
 Angular app was created:
 - show the scv import feature;
-- allows the requsted statistics for EmployeeProjects to be shown in a table.
+- allows the requested statistics for EmployeeProjects to be shown in a table.
 
 Steps to run the app:
-- pull/dowloand the repo
+- pull/dowload the repo
 - set API project as start project if is not set;
 - open swagger http://localhost:5095/index.html	- you will see the endpoint for employees who have worked together on some project
 - test the API endpoint
